@@ -11,6 +11,7 @@ This application facilitates the management of form submissions and entries, off
 - [Run the Application](#run-the-application)
 - [Usage](#usage)
 - [Keyboard Shortcuts](#keyboard-shortcuts)
+- [Video](#video)
 
 ## Introduction
 
@@ -123,3 +124,6 @@ The Windows Form Application is designed to streamline the process of viewing an
 - `Ctrl + F`: Search by Email
 - `Ctrl + E`: Edit Submission
 - `Ctrl + S`: Save Submission (after editing)
+
+## Video
+[Demo Video](https://youtu.be/bUQKV-BeuJ8)
