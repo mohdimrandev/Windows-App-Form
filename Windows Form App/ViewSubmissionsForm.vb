@@ -27,6 +27,7 @@ Public Class ViewSubmissionsForm
     ' List to hold submissions
     Private submissions As List(Of Submission)
     Private currentIndex As Integer
+    Private originalEmail As String
 
     Private Const placeholderText As String = "Search by email"
 
@@ -96,6 +97,9 @@ Public Class ViewSubmissionsForm
 
     ' Event handler for Edit button click
     Private Sub BtnEdit_Click(sender As Object, e As EventArgs) Handles BtnEdit.Click
+        ' Store the original email before editing
+        originalEmail = TxtEmail.Text
+
         ' Enable editing of text fields
         TxtName.ReadOnly = False
         TxtEmail.ReadOnly = False
@@ -104,8 +108,8 @@ Public Class ViewSubmissionsForm
         TxtStopwatch.ReadOnly = False
 
         BtnSave.Enabled = True
-        BtnSave.Text = "Save"
     End Sub
+
 
     ' Event handler for Save button click (after editing)
     Private Sub BtnSave_Click(sender As Object, e As EventArgs) Handles BtnSave.Click
@@ -144,7 +148,8 @@ Public Class ViewSubmissionsForm
 
     ' Method to update submission via API
     Private Async Sub UpdateSubmission(name As String, email As String, phone As String, githubLink As String, stopwatchTime As String)
-        Dim apiUrl As String = $"http://localhost:3000/edit/{Uri.EscapeDataString(email)}"
+        ' Use the original email for the API URL
+        Dim apiUrl As String = $"http://localhost:3000/edit/{Uri.EscapeDataString(originalEmail)}"
 
         Try
             Using client As New HttpClient()
@@ -163,6 +168,7 @@ Public Class ViewSubmissionsForm
             MessageBox.Show($"Error updating submission: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
+
 
     Private Function IsValidEmail(email As String) As Boolean
         Dim pattern As String = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
