@@ -1,0 +1,9 @@
+# Ignore Visual Studio files
+.vs/
+
+# Ignore build directories
+Windows Form App/bin/
+Windows Form App/obj/
+
+# Ignore packages directory
+packages/
