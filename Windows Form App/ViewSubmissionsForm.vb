@@ -32,7 +32,7 @@ Public Class ViewSubmissionsForm
 
     Private Const placeholderText As String = "Search by email"
 
-    Private Sub ViewSubmissionsForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+    Private Async Sub ViewSubmissionsForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Me.Text = "View Submissions"
         Me.KeyPreview = True
 
@@ -42,8 +42,9 @@ Public Class ViewSubmissionsForm
         BtnSave.Enabled = False
 
         ' Fetch submissions from the backend
-        FetchSubmissionsAsync()
+        Await FetchSubmissionsAsync()
     End Sub
+
 
     ' Constructor
     Public Sub New()
@@ -57,7 +58,7 @@ Public Class ViewSubmissionsForm
     End Sub
 
     ' Method to fetch submissions from the backend
-    Private Async Sub FetchSubmissionsAsync()
+    Private Async Function FetchSubmissionsAsync() As Task
         Dim apiUrl As String = "http://localhost:3000/read"
         Try
             Using client As New HttpClient()
@@ -79,7 +80,8 @@ Public Class ViewSubmissionsForm
         Catch ex As Exception
             MessageBox.Show($"Error fetching data: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
-    End Sub
+    End Function
+
 
 
     ' Method to display submission at specified index
@@ -116,8 +118,7 @@ Public Class ViewSubmissionsForm
 
 
     ' Event handler for Save button click (after editing)
-    Private Sub BtnSave_Click(sender As Object, e As EventArgs) Handles BtnSave.Click
-
+    Private Async Sub BtnSave_Click(sender As Object, e As EventArgs) Handles BtnSave.Click
         ' Get updated data from text fields
         Dim updatedName As String = TxtName.Text
         Dim updatedEmail As String = TxtEmail.Text
@@ -137,7 +138,10 @@ Public Class ViewSubmissionsForm
         End If
 
         ' Make PUT request to update backend
-        UpdateSubmission(updatedName, updatedEmail, updatedPhone, updatedGithub, updatedStopwatch)
+        Await UpdateSubmission(updatedName, updatedEmail, updatedPhone, updatedGithub, updatedStopwatch)
+
+        ' Fetch updated submissions from backend after saving
+        Await FetchSubmissionsAsync()
 
         ' Optionally, disable editing mode and reset UI
         TxtName.ReadOnly = True
@@ -150,9 +154,10 @@ Public Class ViewSubmissionsForm
         BtnSave.Enabled = False
     End Sub
 
+
+
     ' Method to update submission via API
-    Private Async Sub UpdateSubmission(name As String, email As String, phone As String, githubLink As String, stopwatchTime As String)
-        ' Use the original email for the API URL
+    Private Async Function UpdateSubmission(name As String, email As String, phone As String, githubLink As String, stopwatchTime As String) As Task
         Dim apiUrl As String = $"http://localhost:3000/edit/{Uri.EscapeDataString(originalEmail)}"
 
         Try
@@ -171,7 +176,8 @@ Public Class ViewSubmissionsForm
         Catch ex As Exception
             MessageBox.Show($"Error updating submission: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
-    End Sub
+    End Function
+
 
 
     Private Function IsValidEmail(email As String) As Boolean
@@ -188,7 +194,7 @@ Public Class ViewSubmissionsForm
 
     ' Event handler for Previous button click
     Private Sub BtnPrevious_Click(sender As Object, e As EventArgs) Handles BtnPrevious.Click
-        ' If the original list is available and we are navigating after a search, reset to the original list
+        ' Reset to original list if applicable
         If originalSubmissions IsNot Nothing AndAlso submissions.Count < originalSubmissions.Count Then
             submissions = New List(Of Submission)(originalSubmissions)
         End If
@@ -199,9 +205,10 @@ Public Class ViewSubmissionsForm
         End If
     End Sub
 
+
     ' Event handler for Next button click
     Private Sub BtnNext_Click(sender As Object, e As EventArgs) Handles BtnNext.Click
-        ' If the original list is available and we are navigating after a search, reset to the original list
+        ' Reset to original list if applicable
         If originalSubmissions IsNot Nothing AndAlso submissions.Count < originalSubmissions.Count Then
             submissions = New List(Of Submission)(originalSubmissions)
         End If
@@ -211,6 +218,7 @@ Public Class ViewSubmissionsForm
             DisplaySubmission(currentIndex)
         End If
     End Sub
+
 
 
     ' Keyboard shortcut handling for Previous, Next, Edit, Save
