@@ -28,6 +28,7 @@ Public Class ViewSubmissionsForm
     Private submissions As List(Of Submission)
     Private currentIndex As Integer
     Private originalEmail As String
+    Private originalSubmissions As List(Of Submission)
 
     Private Const placeholderText As String = "Search by email"
 
@@ -64,6 +65,8 @@ Public Class ViewSubmissionsForm
                 If response.IsSuccessStatusCode Then
                     Dim jsonResponse As String = Await response.Content.ReadAsStringAsync()
                     Me.submissions = JsonConvert.DeserializeObject(Of List(Of Submission))(jsonResponse)
+                    ' Initialize the backup list with the original submissions
+                    Me.originalSubmissions = New List(Of Submission)(Me.submissions)
 
                     ' Display the first submission (if available)
                     If submissions.Count > 0 Then
@@ -77,6 +80,7 @@ Public Class ViewSubmissionsForm
             MessageBox.Show($"Error fetching data: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
+
 
     ' Method to display submission at specified index
     Private Sub DisplaySubmission(index As Integer)
@@ -184,6 +188,11 @@ Public Class ViewSubmissionsForm
 
     ' Event handler for Previous button click
     Private Sub BtnPrevious_Click(sender As Object, e As EventArgs) Handles BtnPrevious.Click
+        ' If the original list is available and we are navigating after a search, reset to the original list
+        If originalSubmissions IsNot Nothing AndAlso submissions.Count < originalSubmissions.Count Then
+            submissions = New List(Of Submission)(originalSubmissions)
+        End If
+
         If currentIndex > 0 Then
             currentIndex -= 1
             DisplaySubmission(currentIndex)
@@ -192,11 +201,17 @@ Public Class ViewSubmissionsForm
 
     ' Event handler for Next button click
     Private Sub BtnNext_Click(sender As Object, e As EventArgs) Handles BtnNext.Click
+        ' If the original list is available and we are navigating after a search, reset to the original list
+        If originalSubmissions IsNot Nothing AndAlso submissions.Count < originalSubmissions.Count Then
+            submissions = New List(Of Submission)(originalSubmissions)
+        End If
+
         If currentIndex < submissions.Count - 1 Then
             currentIndex += 1
             DisplaySubmission(currentIndex)
         End If
     End Sub
+
 
     ' Keyboard shortcut handling for Previous, Next, Edit, Save
     Private Sub ViewSubmissionsForm_KeyDown(sender As Object, e As KeyEventArgs) Handles MyBase.KeyDown
