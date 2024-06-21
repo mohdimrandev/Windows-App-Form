@@ -126,4 +126,4 @@ The Windows Form Application is designed to streamline the process of viewing an
 - `Ctrl + S`: Save Submission (after editing)
 
 ## Video
-[Demo Video](https://youtu.be/bUQKV-BeuJ8)
+[Demo Video](https://youtu.be/hZbGzhk-1Co)
