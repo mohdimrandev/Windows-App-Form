@@ -57,9 +57,9 @@ Public Class CreateSubmissionForm
         Return regex.IsMatch(email)
     End Function
 
-    ' Validate phone number format (numeric only)
+    ' Validate phone number format
     Private Function IsValidPhone(phone As String) As Boolean
-        Dim pattern As String = "^\d+$"
+        Dim pattern As String = "^[\d\s-+]+$"
         Dim regex As New Regex(pattern)
         Return regex.IsMatch(phone)
     End Function

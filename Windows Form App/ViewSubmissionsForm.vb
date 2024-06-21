@@ -124,7 +124,7 @@ Public Class ViewSubmissionsForm
 
         ' Validate phone number
         If Not IsValidPhone(updatedPhone) Then
-            MessageBox.Show("Please enter a valid phone number. Only numeric values are allowed.", "Invalid Phone", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            MessageBox.Show("Please enter a valid phone number. Only numeric values, spaces, hyphens, and the '+' symbol are allowed.", "Invalid Phone", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return
         End If
 
@@ -171,7 +171,7 @@ Public Class ViewSubmissionsForm
     End Function
 
     Private Function IsValidPhone(phone As String) As Boolean
-        Dim pattern As String = "^\d+$"
+        Dim pattern As String = "^[\d\s-+]+$"
         Dim regex As New Regex(pattern)
         Return regex.IsMatch(phone)
     End Function
