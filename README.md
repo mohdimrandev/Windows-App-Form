@@ -76,7 +76,7 @@ The Windows Form Application is designed to streamline the process of viewing an
 
 ### 4. Install Backend Dependencies:
 
-- Start the backend server by following instructions in [backend repository's README.md](https://github.com/mohdimrandev/express-server/README.md) to clone the backend repository, install dependencies, and start the server.
+- Start the backend server by following instructions in [backend repository's](https://github.com/mohdimrandev/express-server) README.md to clone the backend repository, install dependencies, and start the server.
 - Install Dependencies and Start the Server:
   ```cmd
   npm install
